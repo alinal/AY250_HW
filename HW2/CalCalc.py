@@ -57,8 +57,22 @@ def findResult(html):
 		if pt.text:
 			print(pt.text)
 
+
 def test_1():
-assert abs(4. - calculate(‘2**2’)) < .001
+    nt.assert_less(abs(4. - calculate('3**2')),6, msg='Calculate fail.')
+
+def test_2():
+    nt.assert_equals(5.9721986e+24, calculate('mass of the earth in kg',  return_float=True), msg='Calculate fail.')
+
+def test_3():
+    nt.assert_equals('5.9721986*10**24 kg  (kilograms)', calculate('mass of the earth in kg',  return_float=False), msg='Calculate fail. May be flag issue.')
+
+def test_4():
+    nt.assert_greater(20, calculate('average cat weight in lbs',  return_float=True), msg='Calculate fail.')
+
+def test_5():
+    nt.assert_greater(20, calculate('average cat weight in lbs',  return_float=True), msg='Calculate fail.')
+
 
 if __name__ == "__main__":
 
