@@ -1,14 +1,28 @@
 import argparse
+from optparse import OptionParser
+import urllib2 
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-t', action='store_true', default=False, dest='Unfilled_Histogram',
-                    help='True to use an unfilled histogram')
+def calculate(dataStr, return_float=True):
+	try:	
+		if isinstance(dataStr, str):
+			print eval(dataStr, {'__builtins__':{}})
+		else:
+			print eval(str(dataStr), {'__builtins__':{}})
+	except:
+		print 'Asking Wolfram|Alpha'
 
-parser.add_argument('-n', action='store',default=10, type=int,  dest='dataN',
-                    help='Store a constant value')
+if __name__ == "__main__":
 
-parser.add_argument('-T', action='store', default='No Title', dest='title',
-                    help='Store a simple value')
+	# Initiatie parser 
+	parser = OptionParser()
+	parser.add_option('-s', action='store', dest='evalString', default=[],
+	                    help='Store a string for evaluation')
 
+	(results, args) = parser.parse_args()
+	
+	if not results.evalString:
+		for ii, item in enumerate(args):
+			calculate(item)
+	else:	
+		calculate(results.evalString)
 
-results = parser.parse_args()
