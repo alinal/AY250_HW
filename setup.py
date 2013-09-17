@@ -7,5 +7,5 @@ setup(name='CalCalc',
       description='Evaluates strings with eval or Wolfram|Alpha',
       author='Alina Liberman',
       author_email='alinal@berkeley.edu',
-      url='https://github.com/alinal/AY250/HW2.git',
-      packages=['CalCalc'])
+      url='https://github.com/alinal/AY250.git',
+      py_modules=['CalCalc'])
