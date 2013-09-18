@@ -3,7 +3,6 @@ from optparse import OptionParser
 import urllib2 
 import re
 from xml.dom.minidom import parseString
-import nose.tools as nt
 
 """ 
 	Usage: CalCalc [options]
@@ -78,22 +77,22 @@ def calculate(dataStr, return_float=False):
 
 # Test functions
 def test_1():
-    nt.assert_less(abs(4. - calculate('3**2')),6, msg='Calculate fail.')
+    assert abs(4. - calculate('3**2')) < 6
 
 def test_2():
-    nt.assert_equals(5.9721986e+24, calculate('mass of the earth in kg',  return_float=True), msg='Calculate fail.')
+    assert 5.9721986e+24 == calculate('mass of the earth in kg',  return_float=True)
 
 def test_3():
-    nt.assert_equals('5.9721986*10**24 kg  (kilograms)', calculate('mass of the earth in kg',  return_float=False), msg='Calculate fail. May be flag issue.')
+    assert '5.9721986*10**24 kg  (kilograms)' == calculate('mass of the earth in kg',  return_float=False)
 
 def test_4():
-    nt.assert_greater(20, calculate('average cat weight in lbs',  return_float=True), msg='Calculate fail.')
+    assert calculate('average cat weight in lbs',  return_float=True) < 20
 
 def test_5():
-    nt.assert_less(100, calculate('average human weight in lbs',  return_float=True), msg='Calculate fail.')
+    assert calculate('average human weight in lbs',  return_float=True) > 100
 
 def test_6():
-	nt.assert_less_equal(calculate('5.0/10 +4'), 5)
+	assert calculate('5.0/10 +4') < 5
 
 
 if __name__ == "__main__":

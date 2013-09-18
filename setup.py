@@ -9,5 +9,4 @@ setup(name='CalCalc',
       author='Alina Liberman',
       author_email='alinal@berkeley.edu',
       url='https://github.com/alinal/AY250_HW.git',
-      py_modules=['CalCalc']
-      requires=["nose"])
+      py_modules=['CalCalc'])
