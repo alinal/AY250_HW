@@ -1,6 +1,6 @@
 """ Setup file for CalCalc.py"""
 
-from distutils2.core import setup
+from distutils.core import setup
 
 # Call the setup function
 setup(name='CalCalc',
