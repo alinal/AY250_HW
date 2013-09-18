@@ -5,8 +5,34 @@ import re
 from xml.dom.minidom import parseString
 import nose.tools as nt
 
+""" 
+	Usage: CalCalc [options]
+
+	Options:
+		-h Show this help message and exit
+		-s Will store and evaluate the argument following this option 
+		-f Return value will be a float 
+
+	You can also enter a positional argument with no flags. If several positional arguments 
+	(strings or numbers) are entered, each argument will be evaluated separately.  
+	
+"""
 
 def calculate(dataStr, return_float=False):
+	"""
+	calculate(dataStr, return_float=False) 
+
+	Parameters:
+	-----------
+	dataStr : String or number
+			  Input query
+	return_float : True/False, optional
+			  True will return the answer as a floating point number. 		
+	Returns:
+	-----------
+			  Wolfram|Alpha or Python response to the input query. 
+
+	"""
 	try:	
 		if isinstance(dataStr, str):
 			if return_float:
@@ -64,15 +90,13 @@ def test_4():
     nt.assert_greater(20, calculate('average cat weight in lbs',  return_float=True), msg='Calculate fail.')
 
 def test_5():
-    nt.assert_greater(20, calculate('average cat weight in lbs',  return_float=True), msg='Calculate fail.')
+    nt.assert_less(100, calculate('average human weight in lbs',  return_float=True), msg='Calculate fail.')
+
+def test_6():
+	nt.assert_less_equal(calculate('5.0/10 +4'), 5)
 
 
 if __name__ == "__main__":
-""" Function CalCalc 
-	Flags:
-		-s: Enter a string for evaluation
-		-f: Return value will be a float 
-"""
 	# Initiate parser 
 	parser = OptionParser()
 	parser.add_option('-s', action='store', dest='evalString', default=[],
