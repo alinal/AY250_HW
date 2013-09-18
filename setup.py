@@ -1,6 +1,6 @@
 """ Setup file for CalCalc.py"""
 
-from distutils.core import setup
+from distutils2.core import setup
 
 # Call the setup function
 setup(name='CalCalc',
@@ -9,5 +9,4 @@ setup(name='CalCalc',
       author='Alina Liberman',
       author_email='alinal@berkeley.edu',
       url='https://github.com/alinal/AY250_HW.git',
-      #py_modules=['CalCalc/CalCalc'
-      py_modules=['CalCalc'])
+      py_modules=['CalCalc_pack'])
