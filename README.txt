@@ -40,4 +40,5 @@ Command line usage:
 	python CalCalc.py 50/10 -f
 
 
+HW #2 by Alina Liberman
 
