@@ -3,21 +3,19 @@ from optparse import OptionParser
 import urllib2 
 import re
 from xml.dom.minidom import parseString
-import numexpr as ne
-import xml.etree.ElementTree as ET
 import nose.tools as nt
 
 
-def calculate(dataStr, return_float=True):
+def calculate(dataStr, return_float=False):
 	try:	
 		if isinstance(dataStr, str):
 			if return_float:
-				return float(ne.evaluate(dataStr, {'__builtins__':{}}))
+				return float(eval(dataStr, {'__builtins__':{}}))
 			else:
 				return eval(dataStr, {'__builtins__':{}})
 		else:
 			if return_float:
-				return float(ne.evaluate(str(dataStr), {'__builtins__':{}}))
+				return float(eval(str(dataStr), {'__builtins__':{}}))
 			else:
 				return eval(str(dataStr), {'__builtins__':{}})
 	except:
@@ -27,11 +25,12 @@ def calculate(dataStr, return_float=True):
 			urlName='http://api.wolframalpha.com/v2/query?input=%s&appid=UAGAWR-3X6Y8W777Q' % dataStr
 			f=urllib2.urlopen(urlName)
 			html=f.read()
-			#findResult(html)
+			# Find indices of interest
 			start=html.find('Result')
 			begin=html.find('<plaintext>', start)
 			endLine=html.find('</plaintext>', begin)
 			answer=html[begin+len('<plaintext>'):endLine].strip()
+			# Replace unicode characters
 			answer=answer.replace('\xc3\x97', '*')
 			answer=answer.replace('^', '**')
 
@@ -39,10 +38,10 @@ def calculate(dataStr, return_float=True):
 				space=re.search(' ',answer)
 				try:
 					answerNew=answer[:space.start()]
-					answerNew=ne.evaluate(answerNew)
+					answerNew=eval(answerNew)
 					return float(answerNew)
 				except:
-					answerNew=ne.evaluate(answer)
+					answerNew=eval(answer)
 					return float(answerNew)
 			else:
 				return answer
@@ -50,14 +49,8 @@ def calculate(dataStr, return_float=True):
 		else:
 			print "Please enter a string."
 
-# Parser stuff
-def findResult(html):
-	root=ET.fromstring(html)
-	for pt in root.findall('.//plaintext'):
-		if pt.text:
-			print(pt.text)
 
-
+# Test functions
 def test_1():
     nt.assert_less(abs(4. - calculate('3**2')),6, msg='Calculate fail.')
 
@@ -75,7 +68,11 @@ def test_5():
 
 
 if __name__ == "__main__":
-
+""" Function CalCalc 
+	Flags:
+		-s: Enter a string for evaluation
+		-f: Return value will be a float 
+"""
 	# Initiate parser 
 	parser = OptionParser()
 	parser.add_option('-s', action='store', dest='evalString', default=[],
