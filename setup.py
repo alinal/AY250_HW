@@ -10,4 +10,4 @@ setup(name='CalCalc',
       author_email='alinal@berkeley.edu',
       url='https://github.com/alinal/AY250_HW.git',
       #py_modules=['CalCalc/CalCalc'
-      packages=['CalCalc'])
+      py_modules=['CalCalc'])
