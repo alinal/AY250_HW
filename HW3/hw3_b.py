@@ -1,5 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter
+
+minorLocatorY = MultipleLocator(20)
+minorLocatorX=MultipleLocator(200)
+minorLocatorY2=MultipleLocator(10)
 
 dataDir='hw_3_data/'
 allData=['yahoo_data.txt', 'google_data.txt', 'ny_temps.txt' ]
@@ -22,6 +27,13 @@ ax2.set_ylabel('Temperature ('+degreeChar+'F)', fontsize=14)
 ax2.set_ylim(-150, 100)
 ax.set_xlim(48800, 55800)
 ax.set_ylim(-20, 780)
+ax.xaxis.set_ticks_position('bottom')
+
+#for the minor ticks, use no labels; default NullFormatter
+ax.yaxis.set_minor_locator(minorLocatorY)
+ax.xaxis.set_minor_locator(minorLocatorX)
+ax2.yaxis.set_minor_locator(minorLocatorY2)
+
 #ax.tick_params(direction='in', which='both')
 
 lines, labels=ax.get_legend_handles_labels()
