@@ -8,6 +8,7 @@ This folder contains three separate python scripts:
 hw3_a & hw3_b generate plots reproducing Figure_HW3_matlab.pdf & stocks.png, respectively. 
 hw3_c.py is a brushing code for the iris dataset (flower.csv)
 
+Run this code in the pylab environment (i.e. ipython --pylab). 
 
 HW#3 part A
 --------
