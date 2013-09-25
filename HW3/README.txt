@@ -5,7 +5,7 @@ This folder contains three separate python scripts:
 * hw3_b.py
 * hw3_c.py
 
-hw3_a & hw3_b generate plots reproduce Figure_HW3.pdf & stocks.png, respectively. 
+hw3_a & hw3_b generate plots reproducing Figure_HW3_matlab.pdf & stocks.png, respectively. 
 hw3_c.py is a brushing code for the iris dataset (flower.csv)
 
 
