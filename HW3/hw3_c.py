@@ -73,13 +73,16 @@ if __name__ == "__main__":
             textList.append(dic[name])
         return textList
 
-    def drawScatter(ax, tab, catNames, flowerColor):
+    def drawScatter(ax, tab, catNames, flowerColor, plotText=False):
         # Make color dictionary
         allPlots=[]
-        textList=replace_all(tab['species'], flowerColor)  
+        textList=replace_all(tab['species'], flowerColor)
+        textPlot=[1, 6, 11, 16]  
         for i in range(len(catNames)*len(catNames)): 
             ax=plt.subplot(4,4,i+1)
             row, col=divmod(i, 4)
+            if i+1 in textPlot and plotText:
+                ax.text(.4, .9, catNames[col], ha='center', va='center', transform=ax.transAxes)
             allPlots.append(ax.scatter(tab[catNames[row]], tab[catNames[col]], c=textList))
         return ax, allPlots
 
@@ -117,7 +120,8 @@ if __name__ == "__main__":
     flowerColor={'setosa': 'r', 'versicol': 'b', 'virginic': 'g', 'NullFlow': '0.75'}
     textList=replace_all(tab['species'], flowerColor)  
     catNames=['sepal length', 'sepal width', 'petal length', 'petal width']
-    ax, allPlots=drawScatter(ax, tab, catNames, flowerColor)
+    plotText=True
+    ax, allPlots=drawScatter(ax, tab, catNames, flowerColor, plotText)
 
     # Add rectangle
     DataPicker(fig1, ax, tab, catNames, flowerColor)
