@@ -24,7 +24,7 @@ Running hw3_c.py will allow brushing for the flowers.csv data set. The code has 
 
 * Plots the iris dataset in a 4x4 grid
 * Allows you to interactively draw rectangles on one of the subplots
-* Identifyies the datapoints located within the drawn rectangle
+* Identifies the datapoints located within the drawn rectangle
 * Changes the color to gray of the corresponding points in the other subplots 
 
 After drawing a rectangle, hitting 'd' from the keyboard will remove the brushed region, regardless of where the mouse is. 
