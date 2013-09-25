@@ -34,8 +34,6 @@ ax.yaxis.set_minor_locator(minorLocatorY)
 ax.xaxis.set_minor_locator(minorLocatorX)
 ax2.yaxis.set_minor_locator(minorLocatorY2)
 
-#ax.tick_params(direction='in', which='both')
-
 lines, labels=ax.get_legend_handles_labels()
 lines2, labels2=ax2.get_legend_handles_labels()
 ax2.legend(lines+lines2, labels+labels2, loc='center left', frameon=False, fontsize='medium');
