@@ -8,83 +8,117 @@ from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 from matplotlib.patches import Rectangle
 
 
-class StationPicker(object):
-	def __init__(self, axis=None):
-    	self.rect = []
-    	self.x1, self.y1=[]
-        self.x2, self.y2=[]
-        self.cid = line.figure.canvas.mpl_connect('button_press_event', onclick)
-        self.cid = line.figure.canvas.mpl_connect('button_release_event', onrelease)
+class DataPicker(object):
+    def __init__(self, figure, axis=None, tab=None, catNames=None, flowerColor=None):
+        self.x1, self.y1=[],[]
+        self.x2, self.y2=[],[]
+        self.reset=[]
+        self.patch=[]
+        self.tab=tab
+        self.catNames=catNames
+        self.flowerColor=flowerColor
+        self.textListSt=np.copy(textList)
+        self.cidclick = figure.canvas.mpl_connect('button_press_event', self)
+        self.cidrelease = figure.canvas.mpl_connect('button_release_event', self.on_release)
+        self.keypress=figure.canvas.mpl_connect('key_press_event', self.onpress)
+        if axis is None:
+            axis = figure.axes[0]
+        self.axis=axis
+        self.figure=figure
+        self.rect = Rectangle((0,0), 1, 1)
 
-    def onclick(self, event):
-        print 'click', event
-        if event.inaxes!=self.axis: return
+    def __call__(self, event):
+        print 'click'
         self.x1, self.y1 = event.xdata, event.ydata
+        self.axis=event.inaxes
+        # make sure the rectangle drawn in that subplot
+        self.rect.set_axes(event.inaxes)
+        print self.x1, self.y1
         # 0,0 = bottom
 
-    def onrelease(self, event):
-    	print 'release', event:
-    	self.x2, self.y2=event.xdata, event.ydata
-    	rectWidth=self.x2-self.x1
-    	rectHeight=self.y2-self.y1
-    	newRect=Rectangle((x1, y1), rectWidth, rectHeight)
 
-        self.line.figure.canvas.draw()
+    def on_release(self, event):
+        print 'second coords'
+        if event.inaxes != self.axis:
+            return
+        if self.patch !=[] and self.reset !=[]: self.patch.remove() 
+        newtab=[]
+        self.x2, self.y2=event.xdata, event.ydata
+        rectWidth=self.x2-self.x1
+        rectHeight=self.y2-self.y1
+        self.rect=Rectangle((self.x1, self.y1), rectWidth, rectHeight, color='.75', alpha=.5)
+        self.patch=self.axis.add_patch(self.rect)
+        self.reset=1
+        # Find indices in rectangle, set those indices to NullFlower in data
+        datCopy=np.copy(self.tab)
+        newtab=findPoints(self.axis, self.x1, self.y1, self.x2, self.y2, datCopy, self.catNames)
+        drawScatter(self.axis, newtab, self.catNames, self.flowerColor)
+        self.axis.figure.canvas.draw()
 
-     def onpress(self, event):
-        'define some key press events'
-        if self.lastind is None: return
+    def onpress(self, event):
+        # Quit if the user hits 'q'
+        if event.key in ('q','Q'): plt.close(); 
+        if event.key in ('d','D'):
+            drawScatter(self.axis, self.tab, self.catNames, self.flowerColor)
+            if self.patch !=[]: self.patch.remove()
+            self.reset=[]
 
-        if event.key in ('q','Q'): sys.exit()
 
-        if event.key not in ('n', 'p'): return
-        if event.key=='n': inc = 1
-        else:  inc = -1
-
-        self.lastind += inc
-        self.lastind = clip(self.lastind, 0, len(self.xs)-1)
-        self.update()
-
-    def onclick():
-    	x1, y1=event.x, event.y
-    	x2, y2=
-    cid = fig.canvas.mpl_connect('button_press_event', onclick)
-
-    
-
-def replace_all(text, dic):
-	textList=[]
-   	for i, name  in enumerate(text):
-	    textList.append(dic[name])
-	return textList
- 
 
 if __name__ == "__main__":
 
-	# Data file
-	data_fname = 'hw_3_data/flowers.csv'
+    def replace_all(text, dic):
+        textList=[]
+        for i, name  in enumerate(text):
+            textList.append(dic[name])
+        return textList
 
-	# Open file using loadtxt
-	dt=[('sepal length', np.float32), ('sepal width', np.float32), ('petal length', np.float32), ('petal width', np.float32), 
-	('species', (str, 8))]
-	tab = np.loadtxt(data_fname, dt, skiprows=1, delimiter=',')
+    def drawScatter(ax, tab, catNames, flowerColor):
+        # Make color dictionary
+        allPlots=[]
+        textList=replace_all(tab['species'], flowerColor)  
+        for i in range(len(catNames)*len(catNames)): 
+            ax=plt.subplot(4,4,i+1)
+            row, col=divmod(i, 4)
+            allPlots.append(ax.scatter(tab[catNames[row]], tab[catNames[col]], c=textList))
+        return ax, allPlots
 
-	# Make color dictionary
-	flowerColor={'setosa': 'r', 'versicol': 'b', 'virginic': 'g'}
+    def findPoints(axis, x1, y1, x2, y2, tab2, catNames):
+        xdata=tab2[catNames[axis.rowNum]]
+        ydata=tab2[catNames[axis.colNum]]
+        # Get indices
+        if x1>x2:
+            allXind=np.where((xdata>= x2) & (xdata <= (x1)))
+        else:
+            allXind=np.where((xdata>= x1) & (xdata <= (x2)))
+        if y1>y2:
+            allYind=np.where((ydata>= y2) & (ydata <= (y1)))
+        else:
+            allYind=np.where((ydata>= y1) & (ydata <= (y2)))
 
-	# Plot the data
-	f, ax=plt.subplots(4,4)
-	catNames=['sepal length', 'sepal width', 'petal length', 'petal width']
-	
-	textList=replace_all(tab['species'], flowerColor)
-	for i in range(16):	
-		ax=plt.subplot(4,4,i+1)
-		row, col=divmod(i, 4)
-		ax.scatter(tab[catNames[row]], tab[catNames[col]], c=textList)
+        allIndInside=np.intersect1d(allXind[0], allYind[0])
+        outsideInd=np.setdiff1d(range(len(ydata)), allIndInside)
+        tab2['species'][np.array(outsideInd)]='NullFlow'
+        return tab2
 
-	f.patch.set_facecolor('white')
-	plt.show()
+    # Data file
+    data_fname = 'hw_3_data/flowers.csv'
 
-	1/0
-	# Add rectangle
-	rects=ax.bar(range(10), 20*np.random.rand(10))
+    # Open file using loadtxt
+    dt=[('sepal length', np.float32), ('sepal width', np.float32), ('petal length', np.float32), ('petal width', np.float32), 
+    ('species', (str, 8))]
+    tab = np.loadtxt(data_fname, dt, skiprows=1, delimiter=',')
+   
+    # Plot the data
+    fig1, ax=plt.subplots(4,4)
+    fig1.patch.set_facecolor('white')
+
+    # Draw scatter plot
+    flowerColor={'setosa': 'r', 'versicol': 'b', 'virginic': 'g', 'NullFlow': '0.75'}
+    textList=replace_all(tab['species'], flowerColor)  
+    catNames=['sepal length', 'sepal width', 'petal length', 'petal width']
+    ax, allPlots=drawScatter(ax, tab, catNames, flowerColor)
+
+    # Add rectangle
+    DataPicker(fig1, ax, tab, catNames, flowerColor)
+    plt.show()
